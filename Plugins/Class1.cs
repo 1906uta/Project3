@@ -8,6 +8,5 @@ namespace Plugins
 {
     public class Class1
     {
-        // initial commit from jon
-    }
+        // jon commit test 2
 }
