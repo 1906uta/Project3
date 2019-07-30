@@ -35,69 +35,26 @@ namespace Plugin
 
                 try
                 {
-                    tracingService.Trace("connected");
-
-                    //ADD IF RESOLVED
+                 
                     if (mortgage.Attributes.Contains("new_mortgageterm"))
                     {
-
+                       
                         int numberOfMonths = int.Parse(mortgage.Attributes["new_mortgageterm"].ToString());
+                        //get the number of months the mortgage is to last for 
+                        tracingService.Trace("number of months:" + numberOfMonths);
 
-                        tracingService.Trace("number of months plus one" + numberOfMonths + 1);
-
-                        /*
-                         tracingService.Trace("quick test: " + claim.Attributes["statecode"].ToString());
-                         int resolved = ((OptionSetValue)claim["statecode"]).Value;
-
-                         tracingService.Trace("quick test2: " + resolved);
-                         if (resolved == 1)
-                         {
-                             Entity accountImage = context.PreEntityImages["incidentPreImage"];
-
-                             if (accountImage.Attributes.Contains("ownerid"))
-                             {
-                                 tracingService.Trace("does contain");
-
-                                 tracingService.Trace(accountImage.Attributes["ownerid"].ToString());
-                                 EntityReference c = ((EntityReference)accountImage.Attributes["ownerid"]);
-                                 Entity owner = service.Retrieve(c.LogicalName, c.Id,
-                                 new ColumnSet("firstname", "lastname", "address1_country"));
-
-                                 tracingService.Trace("trace after entity: " + owner.Id.ToString());
-                                 String ownerIdString = owner.Id.ToString();
-                                 Guid ownerId = new Guid(owner.Id.ToString());
-
-                                 ColumnSet cols = new ColumnSet(
-                                     new String[] { "firstname" });
-
-                                 Entity ownerEntity = (Entity)service.Retrieve("systemuser", ownerId, cols);
-
-                                 tracingService.Trace("after retrieving: " + ownerEntity.Attributes["firstname"].ToString());
-
-                                 QueryExpression numberQuery2 = new QueryExpression("rev_config");
-                                 numberQuery2.ColumnSet.AddColumn("rev_numberofclaims");
-
-                                 numberQuery2.Criteria.AddCondition("rev_name", ConditionOperator.Equal, ownerIdString);
-                                 EntityCollection numbercases2 = service.RetrieveMultiple(numberQuery2);
-
-                                 if (numbercases2.Entities.Count > 0)
-                                 {
-                                     foreach (Entity nj in numbercases2.Entities)
-                                     {
-                                         int nClaims = Int32.Parse(nj.Attributes["rev_numberofclaims"].ToString());
-
-                                         tracingService.Trace("old number of claims: " + nClaims);
-                                         nClaims--;
-
-                                         tracingService.Trace("new number of claims: " + nClaims);
-                                         nj.Attributes["rev_numberofclaims"] = nClaims;
-
-                                         service.Update(nj);
-                                     }
-                                 }
-
-                             }
-                         }*/
+                        for(int i = 0; i< numberOfMonths; i++)
+                        {
+                            //create a payment record per month
+                            Entity payments = new Entity("new_paymentrecord");
+                            //populate the lookup field with the current Mortgage
+                            payments.Attributes["new_mortgage"] = mortgage.ToEntityReference();
+                            service.Create(payments);
+                            
+                            
+                        }
+                        tracingService.Trace("succeeded");
+                      
                     }
 
 
