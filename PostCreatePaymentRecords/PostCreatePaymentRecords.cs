@@ -38,7 +38,11 @@ namespace Plugin
                  
                     if (mortgage.Attributes.Contains("new_mortgageterm"))
                     {
-                       
+                     /*   Guid USABU = new Guid("ba9e5d5d-3eb2-e911-a989-000d3a3acafd");
+                        Entity contact = service.Retrieve(c.LogicalName, c.Id,
+                    new ColumnSet("firstname", "lastname", "address1_country"));*/
+
+                        //Entity ownerEntity = (Entity)service.Retrieve("systemuser", ownerId, cols);
                         int numberOfMonths = int.Parse(mortgage.Attributes["new_mortgageterm"].ToString());
                         //get the number of months the mortgage is to last for 
                         tracingService.Trace("number of months:" + numberOfMonths);
