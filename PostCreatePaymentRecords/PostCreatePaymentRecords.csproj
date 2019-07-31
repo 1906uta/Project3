@@ -38,16 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xrm.Sdk">
-      <HintPath>..\..\Insurance management system\packages\Microsoft.CrmSdk.XrmTooling.PluginRegistrationTool.9.0.2.12\tools\Microsoft.Xrm.Sdk.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xrm.Sdk.Workflow">
-      <HintPath>..\..\Insurance management system\packages\Microsoft.CrmSdk.XrmTooling.PluginRegistrationTool.9.0.2.12\tools\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xrm.Tooling.Connector">
-      <HintPath>..\..\Insurance management system\packages\Microsoft.CrmSdk.XrmTooling.PluginRegistrationTool.9.0.2.12\tools\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl">
-      <HintPath>..\..\Insurance management system\packages\Microsoft.CrmSdk.XrmTooling.PluginRegistrationTool.9.0.2.12\tools\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\RevatureC#\Project2\Project2Revature\ExchangeRate\bin\Debug\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
