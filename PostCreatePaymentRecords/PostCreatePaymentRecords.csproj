@@ -51,8 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PostAssignCase.cs" />
     <Compile Include="PostAssignMortgage.cs" />
     <Compile Include="PostCreatePaymentRecords.cs" />
+    <Compile Include="PreAutofillCustomer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
