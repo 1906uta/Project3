@@ -1,0 +1,9 @@
+C:\Users\DELL\source\repos\WorkFlow\bin\Debug\WorkFlow.dll
+C:\Users\DELL\source\repos\WorkFlow\bin\Debug\WorkFlow.pdb
+C:\Users\DELL\source\repos\WorkFlow\bin\Debug\Microsoft.Xrm.Sdk.dll
+C:\Users\DELL\source\repos\WorkFlow\bin\Debug\Microsoft.Xrm.Sdk.Workflow.dll
+C:\Users\DELL\source\repos\WorkFlow\obj\Debug\WorkFlow.csprojAssemblyReference.cache
+C:\Users\DELL\source\repos\WorkFlow\obj\Debug\WorkFlow.csproj.CoreCompileInputs.cache
+C:\Users\DELL\source\repos\WorkFlow\obj\Debug\WorkFlow.csproj.CopyComplete
+C:\Users\DELL\source\repos\WorkFlow\obj\Debug\WorkFlow.dll
+C:\Users\DELL\source\repos\WorkFlow\obj\Debug\WorkFlow.pdb
