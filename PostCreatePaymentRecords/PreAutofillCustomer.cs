@@ -8,7 +8,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System.ServiceModel;
 namespace Plugin
 {
-    public class PostCreatePaymentsRecords : IPlugin
+    public class PreAutofillCustomer : IPlugin
     {
         public void Execute(IServiceProvider serviceProvider)
         {
@@ -25,7 +25,7 @@ namespace Plugin
                 context.InputParameters["Target"] is Entity)
             {
                 // Obtain the target entity from the input parameters.  
-                Entity mortgage = (Entity)context.InputParameters["Target"];
+                Entity incident = (Entity)context.InputParameters["Target"];
 
                 // Obtain the organization service reference which you will need for  
                 // web service calls.  
@@ -35,35 +35,20 @@ namespace Plugin
 
                 try
                 {
-                 
-                    if (mortgage.Attributes.Contains("new_mortgageterm"))
+                    if (incident.Attributes.Contains("new_mortgage"))
                     {
-                     /*   Guid USABU = new Guid("ba9e5d5d-3eb2-e911-a989-000d3a3acafd");
-                        Entity contact = service.Retrieve(c.LogicalName, c.Id,
-                    new ColumnSet("firstname", "lastname", "address1_country"));*/
+                        //get info
+                        EntityReference mortgage = (EntityReference)incident.Attributes["new_mortgage"];
+                        Entity entity = service.Retrieve(mortgage.LogicalName, mortgage.Id,
+                     new ColumnSet("new_country", "new_contact"));
 
-                        //Entity ownerEntity = (Entity)service.Retrieve("systemuser", ownerId, cols);
-                        int numberOfMonths = int.Parse(mortgage.Attributes["new_mortgageterm"].ToString());
-                        //get the number of months the mortgage is to last for 
-                        tracingService.Trace("number of months:" + numberOfMonths);
-
-                        for(int i = 0; i< numberOfMonths; i++)
-                        {
-                            //create a payment record per month
-                            Entity payments = new Entity("new_paymentrecord");
-                            //populate the lookup field with the current Mortgage
-                            payments.Attributes["new_mortgage"] = mortgage.ToEntityReference();
-                            service.Create(payments);
-                            
-                            
-                        }
-                        tracingService.Trace("succeeded");
-                      
+                       //assign it 
+                        incident.Attributes.Add("customerid", entity.Attributes["new_contact"]);
+                    
+                       
                     }
-
-
+                   
                 }
-
                 catch (FaultException<OrganizationServiceFault> ex)
                 {
                     throw new InvalidPluginExecutionException("An error occurred in FollowUpPlugin.", ex);
