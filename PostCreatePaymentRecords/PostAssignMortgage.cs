@@ -44,12 +44,12 @@ namespace Plugin
                         Guid USTeam = new Guid("df9c2d57-e1b2-e911-a989-000d3a3acafd");
                         Guid CATeam = new Guid("b7bf485d-e1b2-e911-a989-000d3a3acafd");
 
-                        if (country =="US")
+                        if (country == "US")
                         {
                             tracingService.Trace("inside USA");
-                            int curr=0;
+                            int curr = 0;
                             int nusers = 0;
-                           //get all the users here
+                            //get all the users here
                             QueryExpression userQuery = new QueryExpression("systemuser");
                             userQuery.ColumnSet = new ColumnSet(true);
                             LinkEntity teamLink = new LinkEntity("systemuser", "teammembership", "systemuserid", "systemuserid", JoinOperator.Inner);
@@ -70,12 +70,12 @@ namespace Plugin
                                 //if there is users then this
                                 tracingService.Trace("users in USA team");
                                 foreach (Entity user in retrievedUsers.Entities)
-                                { 
+                                {
                                     //add the users to a List 
                                     var userId = user.Id;
                                     var current = user.Contains("fullname") ? user["fullname"].ToString() : "";
                                     userlist.Add(user);
-                                    tracingService.Trace("name of users " + current);
+                                    // tracingService.Trace("name of users " + current);
                                     nusers++;
                                 }
 
@@ -117,9 +117,11 @@ namespace Plugin
                                 }
                             }
                             //change the ownership
+                           
                             tracingService.Trace("current user" + userlist[curr]);
                             mortgage.Attributes["ownerid"] = userlist[curr].ToEntityReference();
-                          service.Update(mortgage);
+                            mortgage.EntityState = EntityState.Changed;
+                             service.Update(mortgage);
                         }
 
                         if (country == "CA")
@@ -153,7 +155,7 @@ namespace Plugin
                                     var userId = user.Id;
                                     var current = user.Contains("fullname") ? user["fullname"].ToString() : "";
                                     userlist.Add(user);
-                                    tracingService.Trace("name of users " + current);
+                                    //  tracingService.Trace("name of users " + current);
                                     nusers++;
                                 }
 
@@ -187,19 +189,140 @@ namespace Plugin
 
                                     tracingService.Trace("next: " + next);
                                     count["new_value"] = next.ToString();
-
+                                    mortgage.EntityState = EntityState.Changed;
                                     service.Update(count);
                                 }
                             }
                             //Assing users 
-                            tracingService.Trace("current user" + userlist[curr]);
-                            mortgage.Attributes["ownerid"] = userlist[curr].ToEntityReference();
-                            service.Update(mortgage);
+                           // tracingService.Trace("current user" + userlist[curr].Attributes["firstname"]);
+                           // mortgage.Attributes["ownerid"] = userlist[curr].ToEntityReference();
+                           // service.Update(mortgage);
+                            tracingService.Trace("last");
                         }
 
 
                     }
-                  
+                    //MIGHT MOVE IT TO ITS OWN PLUG IN
+                    /*
+                    if (mortgage.Attributes.Contains("new_country"))
+                    {
+                        string country = ((mortgage.FormattedValues["new_country"]).ToString());
+                        int months = Int32.Parse(mortgage.Attributes["new_mortgageterm"].ToString());
+
+                        decimal amount = ((Money)mortgage.Attributes["new_mortgageamount"]).Value;
+                        double tax = 0;
+                        double apr = 0;
+                        if (country == "US")
+                        {
+                            if (mortgage.Attributes.Contains("new_stateset"))
+                            {
+                              
+                               
+                                string state = mortgage.FormattedValues["new_stateset"].ToString();
+                                state = "Tax " + state;
+                                tracingService.Trace(" tax state: " + state);
+
+                                QueryExpression query = new QueryExpression("new_config");
+                                query.ColumnSet.AddColumn("new_value");
+                                query.Criteria.AddCondition("new_key", ConditionOperator.Equal, state);
+
+                                EntityCollection taxC = service.RetrieveMultiple(query);
+                                if (taxC.Entities.Count == 0)
+                                {
+                                    throw new InvalidPluginExecutionException("state not found");
+                                }
+
+                                if (taxC.Entities.Count == 1)
+                                {
+                                    foreach (Entity taxentity in taxC.Entities)
+                                    {
+                                       
+                                        tax = Convert.ToDouble(taxentity["new_value"].ToString());
+                                    }
+                                   
+                                }
+                                else
+                                {
+                                    throw new InvalidPluginExecutionException("state not found");
+                                }
+                                QueryExpression APRquery = new QueryExpression("new_config");
+                                APRquery.ColumnSet.AddColumn("new_value");
+                                APRquery.Criteria.AddCondition("new_key", ConditionOperator.BeginsWith, "Base APR");
+
+                                EntityCollection APRC = service.RetrieveMultiple(APRquery);
+
+                                if (APRC.Entities.Count > 0)
+                                {
+                                    foreach(Entity aprentity in APRC.Entities)
+                                    {
+                                      
+                                       apr = Convert.ToDouble(aprentity["new_value"].ToString());
+                                    }
+                                    
+                                }
+                                else
+                                {
+                                    tracingService.Trace("none found");
+                                }
+                               
+                            }
+                        }else if(country == "CA")
+                        {
+                            QueryExpression query = new QueryExpression("new_config");
+                            query.ColumnSet.AddColumn("new_value");
+                            query.Criteria.AddCondition("new_key", ConditionOperator.Equal, "Tax Canada");
+
+                            EntityCollection taxC = service.RetrieveMultiple(query);
+                            
+
+                            if (taxC.Entities.Count == 1)
+                            {
+                                foreach (Entity taxentity in taxC.Entities)
+                                {
+
+                                    tax = Convert.ToDouble(taxentity["new_value"].ToString());
+                                }
+
+                            }
+                            QueryExpression APRquery = new QueryExpression("new_config");
+                            APRquery.ColumnSet.AddColumn("new_value");
+                            APRquery.Criteria.AddCondition("new_key", ConditionOperator.BeginsWith, "Base APR");
+
+                            EntityCollection APRC = service.RetrieveMultiple(APRquery);
+
+                            if (APRC.Entities.Count > 0)
+                            {
+                                foreach (Entity aprentity in APRC.Entities)
+                                {
+
+                                    apr = Convert.ToDouble(aprentity["new_value"].ToString());
+                                }
+
+                            }
+                            else
+                            {
+                                tracingService.Trace("none found");
+                            }
+
+                        }
+
+                        else
+                        {
+                            throw new InvalidPluginExecutionException("country not found");
+                        }
+                       // tax = tax * 100;
+                        //apr = apr * 100;
+                        tracingService.Trace("tax " + tax);
+                        tracingService.Trace("apr " + apr);
+                        double postamount = (double)amount + ((double)amount * tax);
+
+                        double total = (postamount * (apr / 12)) / (1 - Math.Pow(1 + (apr / 12), (double)(-months)));
+                        decimal totalPerMonth = (decimal)total;
+                        tracingService.Trace("total: " + total);
+
+                       // mortgage.Attributes.Add("new_monthlypayment", new Money(totalPerMonth));
+                        service.Update(mortgage);
+                    }*/
                 }
 
                 catch (FaultException<OrganizationServiceFault> ex)
